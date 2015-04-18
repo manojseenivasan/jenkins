@@ -1,0 +1,29 @@
+<?php $_category = Mage::registry("category"); ?>
+<div class="position-content-header" style="margin-top:20px;margin-bottom:10px;">
+	<table cellspacing="0" style="width:100%;">
+	    <tbody>
+	    	<tr>
+		        <td style="width:50%;"></td>
+		        <td class="a-right">
+		            <button id="id_position"><span><span><span><?php echo $this->__('Save Position'); ?></span></span></span></button>      
+		        </td>
+	    	</tr>
+		</tbody>
+	</table>
+</div>
+<div class="no-display">
+	<form id="position-form" action="<?php echo Mage::helper("adminhtml")->getUrl('*/*/savePosition', array('category_id'=>$_category->getId())); ?>" method="post">
+		<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+	</form>
+</div>
+<script type="text/javascript">
+	jQuery(document).ready(function() { 
+		jQuery("#id_position").click(function() {
+			jQuery("#schematicGrid input").each(function() {				
+			    jQuery(this).attr('value', jQuery(this).val()).clone().appendTo('#position-form');
+			});		
+			jQuery("#position-form").submit();
+        });
+
+	});
+</script>

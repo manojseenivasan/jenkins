@@ -1,0 +1,12 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">   
+      <catalog_product_view>
+        <reference name="product.info">
+            <block type="imagemarker/product_schematics" name="product.schematics" as="schematics" template="schematic/product/schematic-list.phtml" after="reviews">
+                <action ifconfig="imagemarker_section/imagemarker_group/product_tab" method="addToParentGroup"><group>detailed_info</group></action>
+                <action ifconfig="imagemarker_section/imagemarker_group/product_tab" method="setTitle" translate="value"><value>Schematics</value></action>
+            </block>
+        </reference>
+    </catalog_product_view>
+</layout>   
+	

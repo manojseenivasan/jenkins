@@ -1,0 +1,104 @@
+<?php $_category = Mage::registry("category"); ?>
+<div class="content-header">
+	<table cellspacing="0">
+	    <tbody>
+	    	<tr>
+		        <td style="width:50%;"><h3 class="icon-head head-products"><?php echo $this->__('%s (Schematic)', $_category->getName()); ?></h3></td>
+		        <td class="a-right">
+		            <button style="" onclick="setLocation('<?php echo $this->getUrl('*/*/'); ?>')" class="scalable back" type="button" title="<?php echo $this->__('Back'); ?>" id="id_eb9eb3dade652c21d784b6acf1beda41"><span><span><span><?php echo $this->__('Back'); ?></span></span></span></button>        
+		        </td>
+	    	</tr>
+		</tbody>
+	</table>
+</div>
+
+<form action="<?php echo $this->getSaveAction(); ?>" method="post" name="schematic-layer" id="schematic-layer">
+	<input type="hidden" name="text" id="text" value="" />
+	<input type="hidden" name="height" id="height" value="" />
+	<input type="hidden" name="width" id="width" value="" />
+	<input type="hidden" name="top" id="top" value="" />
+	<input type="hidden" name="left" id="left" value="" />
+	<input type="hidden" name="id" id="id" value="<?php echo $this->getRequest()->getParam('layer'); ?>" />
+	<input type="hidden" name="category_id" id="category_id" value="<?php echo $_category->getId(); ?>" />
+	<input type="hidden" name="product_ids" id="product_ids" value="" />	
+	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+</form>
+<div id="schmatic-image" class="schmatic-image">
+	<img src="<?php echo $this->getSchematicImageUrl(); ?>" alt="<?php echo $this->escapeHtml($_category->getName()); ?>" title="<?php echo $this->escapeHtml($_category->getName()); ?>" id="toAnnotate" />
+</div>
+<?php if($this->getRequest()->getParam('layer')): ?>
+	<a id="edit-back" href="<?php echo $this->getUrl('*/*/edit', array('id' => $this->getRequest()->getParam('id'))); ?>"><?php echo $this->__('Edit'); ?></a>
+	<a id="delete-back" onclick="return delete_confirmation();" href="<?php echo $this->getUrl('*/*/delete', array('id' => $this->getRequest()->getParam('id'), 'layer' => $this->getRequest()->getParam('layer'))); ?>"><?php echo $this->__('Delete'); ?></a>
+<?php else: ?>
+	<div id="dumpty-id" style="display:none;"></div>
+<?php endif; ?>
+
+<script type="text/javascript">        	
+    jQuery(window).load(function() {
+		jQuery("#toAnnotate").annotateImage({
+			editable: true,
+			useAjax: false,
+			notes:  [
+					<?php foreach($this->getLayerCollection() as $layer): ?>
+						{ 
+						  "top": <?php echo $layer->getTop(); ?>,
+					      "left": <?php echo $layer->getLeft(); ?>,
+					      "width": <?php echo $layer->getWidth(); ?>,
+					      "height": <?php echo $layer->getHeight(); ?>,
+					      "text": "<?php echo $layer->getText(); ?>",
+					      "id": <?php echo $layer->getId(); ?>,
+					      <?php if($layer_id = $this->getRequest()->getParam('layer')): ?>
+					      	<?php if($layer_id == $layer->getId()): ?>
+					      		"editable": true
+					      	<?php else: ?>
+					      		"editable": false
+					      	<?php endif; ?>
+					      <?php else: ?>
+					      		"editable": false
+					      <?php endif; ?>
+					   },
+					<?php endforeach; ?>
+					]
+		});
+		
+		if(jQuery('.image-annotate-area-editable')){
+            jQuery('.image-annotate-area-editable').trigger('click');
+        }
+
+        jQuery('#catalog_category_products .grid').height(jQuery('.image-annotate-canvas').height()-4);
+	});
+
+	<?php if(!$this->getRequest()->getParam('layer')): ?>
+		jQuery(document).ready(function() {       
+			jQuery(".layer-row").on('mouseenter mouseleave', function(e) {
+				var get = jQuery.grep(this.className.split(" "), function(v, i){
+			       return v.indexOf('row') === 0;
+			   }).join();
+			   layer = get.split("-")[1];
+			   jQuery(".layer"+layer).trigger(e.type);
+			});
+	    });
+	<?php endif; ?>
+
+	jQuery(document).ready(function() { 
+		jQuery("#catalog_category_products_table tbody tr td.last").click(function() {
+			var checked = jQuery(this).parent().find(':checkbox').is(":checked");
+			if(checked){
+            	jQuery(this).parent().find(':checkbox').prop('checked', false).triggerHandler('click');
+            }
+            else{
+            	jQuery(this).parent().find(':checkbox').prop('checked', true).triggerHandler('click');
+            }
+        });
+	});
+
+	function delete_confirmation(current)
+	{
+		if(confirm("<?php echo $this->helper('imagemarker')->__('Are you sure to delete this layer') ?>") == true) {
+			window.location = current.href;
+		}
+		return false;
+	}
+
+
+</script>

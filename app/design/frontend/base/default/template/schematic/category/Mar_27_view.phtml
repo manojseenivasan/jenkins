@@ -1,0 +1,309 @@
+<?php
+    $_helper    = $this->helper('catalog/output');
+    $_category  = $this->getCurrentCategory();
+    $schematic_helper     = $this->helper('imagemarker');
+    $_productCollection = $schematic_helper->getSchematicCategoryCollection($_category->getId());
+    $layer_collection = $schematic_helper->getLayerCollection($_category->getId());
+    
+    $_imgHtml   = '';
+    if ($_category->getSchematic()) {
+        $_imgUrl = Mage::getBaseUrl('media').'catalog'.DS.'category'.DS.$_category->getSchematic();
+        $image = getimagesize($_imgUrl);
+        $_imgHtml = '<div class="schematic-image"><img id="toAnnotate" src="'.$_imgUrl.'" alt="'.$this->escapeHtml($_category->getName()).'" title="'.$this->escapeHtml($_category->getName()).'" style="height:'.$image[1].'; width:'.$image[0].';" /></div>';
+        
+        $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+    }
+?>
+<ul class="messages-spl-cat messages" style="display:none;">
+	<li class="main-message-ajax">
+		<ul>
+			<li>
+				<span>&nbsp;</span>
+			</li>
+		</ul>
+	</li>
+</ul>
+<div class="page-title category-title">
+    <?php if($this->IsRssCatalogEnable() && $this->IsTopCategory()): ?>
+        <a href="<?php echo $this->getRssLink() ?>" class="link-rss"><?php echo $this->__('Subscribe to RSS Feed') ?></a>
+    <?php endif; ?>
+    <h1><?php echo $_helper->categoryAttribute($_category, $_category->getName(), 'name') ?></h1>
+</div>
+
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+
+<?php if($_description=$this->getCurrentCategory()->getDescription()): ?>
+    <div class="category-description std">
+        <?php echo $_helper->categoryAttribute($_category, $_description, 'description') ?>
+    </div>
+<?php endif; ?>
+
+<div class="schematic-data cat-id">
+    <form name="schematic-layer" id="schematic-layer">
+        <?php if(Mage::getSingleton('customer/session')->isLoggedIn()) {
+            $customer = Mage::getSingleton('customer/session')->getCustomer();
+        } ?>
+        <input type="hidden" name="name" id="customer_name" value="<?php if(Mage::getSingleton('customer/session')->isLoggedIn()) {  echo $customer->getName(); } ?>" />
+        <input type="hidden" name="email" id="customer_email" value="<?php if(Mage::getSingleton('customer/session')->isLoggedIn()) {  echo $customer->getEmail(); } ?>" />
+        <input type="hidden" name="phone" id="customer_phone" value="<?php if(Mage::getSingleton('customer/session')->isLoggedIn()) { $customerAddressId = $customer->getDefaultBilling(); if($customerAddressId){  $address = Mage::getModel('customer/address')->load($customerAddressId); echo $address->getTelephone(); } } ?>" />
+    </form>
+    <table class="data-table" id="schematic-table" style="position:relative;">
+        <tbody>
+            <tr>
+                <td width="50%" valign="top" style="padding:0 10px;"> 
+                    <?php if($_imgUrl): ?>
+                        <?php echo $_imgHtml ?>
+                    <?php endif; ?>
+                </td>
+                <td width="50%" valign="top" style="padding:0 10px;">
+                    <?php if($_productCollection->count()): ?>                            
+                    <table id="schematic-products-table" class="data-table">
+                        <colgroup>
+                            <col width="55">
+                            <col>
+                            <col width="185">
+                            <!--<col width="15">-->
+                        </colgroup>
+                        <thead>
+                            <tr class="headings">
+                                <th class="a-center"><?php echo $this->__('Part No'); ?></th>
+                                <th class=""><?php echo $this->__('Description'); ?></th>
+                                <th class="a-center">&nbsp;</th>
+                                <!--<th class="">&nbsp;</th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($layer_collection as $layer): ?>
+                                <?php if(empty($layer->getProductIds())): continue; endif; ?>
+                                <?php $layer_products = explode(',', $layer->getProductIds()); ?>
+                                <?php foreach ($_productCollection as $product): ?>
+                                    <?php if(!in_array($product->getId(), $layer_products)):  continue; endif; ?>
+                                    <tr class="layer-row row-<?php echo $layer->getId(); ?>" id="<?php echo $product->getId(); ?>" style="border-color: rgb(250, 191, 143); border-style: none; background: none repeat scroll 0% 0% rgb(255, 255, 255);">
+                                        <td class=""><?php echo $product->getSku(); ?></td>
+                                        <td class=""><?php echo $product->getName(); ?></td>
+                                        <td class="">
+                                            <?php $product_list_block = new Mage_Catalog_Block_Product_List; ?>
+                                            <form action="<?php echo $product_list_block->getAddToCartUrl($product); ?>" method="post">
+                                                <div class="no-display">
+                                                    <input type="hidden" value="<?php echo $product->getId(); ?>" name="product">
+                                                </div>
+                                                <?php if($product->isSaleable()): ?>
+                                                    <div class="add-to-cart-buttons">
+                                                        <input type="text" class="input-text qty" title="<?php echo $this->__('Qty'); ?>" value="1" maxlength="12" id="qty" name="qty" pattern="\d*">
+                                                        <button onclick="return schematic_addtocart(this);" type="submit" class="button btn-cart" title="<?php echo $this->__('Add to Cart'); ?>"><span><span><?php echo $this->__('Add to Cart'); ?></span></span></button>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </form>
+                                            <?php unset($product_list_block); ?>
+                                        </td>
+                                        <!--<td class="a-center">
+                                            <?php if($product->isSaleable()): ?>
+                                                <div id="cart-count-<?php echo $product->getId(); ?>"><?php if($item_qty = $schematic_helper->getProductQty($product)): echo $item_qty; else: echo 0; endif; ?> 
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>-->
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script language="javascript">
+    jQuery(window).load(function() {
+        jQuery("#toAnnotate").annotateImage({
+            getUrl: '<?php echo $this->getUrl('imagemarker/index/index', array('category_id' => $_category->getId())); ?>',
+            saveUrl: '<?php echo $this->getUrl('imagemarker/index/send', array('category_id' => $_category->getId())); ?>',
+            deleteUrl: '<?php echo $this->getUrl('imagemarker/index/products', array('category_id' => $_category->getId())); ?>',
+            editable: true,
+            useAjax: true,
+            /*notes:  [
+                    <?php foreach($layer_collection as $layer): ?>
+                        { 
+                          "top": <?php echo $layer->getTop(); ?>,
+                          "left": <?php echo $layer->getLeft(); ?>,
+                          "width": <?php echo $layer->getWidth(); ?>,
+                          "height": <?php echo $layer->getHeight(); ?>,
+                          "text": "<?php echo $layer->getText(); ?>",
+                          "id": <?php echo $layer->getId(); ?>,
+                          "editable": true 
+                        },
+                    <?php endforeach; ?>
+                    ]*/
+        });
+    });
+    jQuery(document).ready(function() {       
+        jQuery(".layer-row").on('mouseenter mouseleave', function(e) {
+            var get = jQuery.grep(this.className.split(" "), function(v, i){
+               return v.indexOf('row') === 0;
+           }).join();
+           layer = get.split("-")[1];
+           jQuery(".layer"+layer).trigger(e.type);
+        });
+
+        jQuery("#schematic-products-table").mouseleave(function() {
+            jQuery(".layer-row").removeClass('on-mouse');
+        });
+    });
+
+    jQuery.fn.stickyfloat = function(options, lockBottom) {
+
+        var obj = this;
+        var floaty = obj.offset().top;
+        var footery = jQuery('.footer-container').offset().top;
+        var startOffset = obj.parent().offset().top;
+        var parentPaddingTop = startOffset - obj.parent().parent().offset().top;
+        var opts = jQuery.extend({ startOffset: startOffset, offsetY: parentPaddingTop, duration: 200, lockBottom:true }, options);
+        var originalWidth = obj.width();
+
+        if(opts.lockBottom) {
+            var bottomPos = footery - (obj.outerHeight() + floaty + startOffset); // + 14 //get the maximum scrollTop value
+            if (bottomPos < 0) {
+                bottomPos = 0;
+            }
+        }
+        
+     //   if(bottomPos > obj.outerHeight()) {
+            
+            obj.css('width', originalWidth + 'px');
+            obj.css({ position: 'absolute', top : parentPaddingTop+ 'px'});
+
+            function updateFloat() {
+                
+                obj.stop(); // stop all calculations on scroll event
+                var scrollTop = jQuery(document).scrollTop();
+                
+                var footery = jQuery('.footer-container').offset().top;
+                if(opts.lockBottom){
+                    var bottomPos = footery - (obj.outerHeight() + floaty ); // + 14  //get the maximum scrollTop value
+                    if( bottomPos < 0 )
+                        bottomPos = 0;
+                }
+
+                var pastStartOffset         = scrollTop > opts.startOffset; // check if the window was scrolled down more than the start offset declared.
+                var objFartherThanTopPos    = obj.offset().top > startOffset;   // check if the object is at it's top position (starting point)
+                var objBiggerThanWindow     = obj.outerHeight() < jQuery(window).height();  // if the window size is smaller than the Obj size, then do not animate.
+
+                // if window scrolled down more than startOffset OR obj position is greater than
+                // the top position possible (+ offsetY) AND window size must be bigger than Obj size
+                // if( (pastStartOffset || objFartherThanTopPos) && objBiggerThanWindow )
+                if((pastStartOffset || objFartherThanTopPos)) {
+                
+                    var newpos = ((scrollTop - startOffset) + parentPaddingTop);
+                    if (newpos > ((bottomPos ) + parentPaddingTop)) { // + 14
+                        newpos = bottomPos + parentPaddingTop - 31;
+                    }
+                    if ( scrollTop < (parentPaddingTop)) { //  - 14 // if window scrolled < starting offset, then reset Obj position (opts.offsetY);
+                        newpos = parentPaddingTop; // - 14
+                    }
+                    if(newpos < parentPaddingTop) {
+                        newpos = parentPaddingTop;  // - 14
+                    }
+                    
+                    obj.animate({ top: newpos }, opts.duration );
+                }
+            }
+            
+            if(window.location.hash) {
+                updateFloat();
+            }
+
+            jQuery(window).scroll(function () {
+                updateFloat();
+            });
+        //}
+    };
+
+    jQuery(document).ready(function() {
+        var img_height = jQuery('.schematic-image').outerHeight();
+        var prod_list = jQuery('#schematic-products-table').outerHeight();
+        if(prod_list>img_height){
+            jQuery('.schematic-image').stickyfloat({ duration: 100 });
+        }
+
+        jQuery(document).click(function(event) {
+            var container = jQuery("#image-annotate-edit-form");
+            if (!container.is(event.target) && container.has(event.target).length === 0)
+            {
+                jQuery('.image-annotate-edit-close').trigger('click');
+                jQuery('.category-title').trigger('click');
+                jQuery('.category-title').trigger('mouseenter');
+                event.preventDefault()
+            }
+        });
+        jQuery('.category-title').click(function(event) {  
+            event.stopPropagation();
+        });
+    });
+
+    function show_set_product(hide, show){
+        document.getElementById('show-set'+hide).style.display = 'none';
+        document.getElementById('show-set'+show).style.display = 'block';
+    }
+
+    function schematic_addtocart(form){
+        if(jQuery(form).is("button")){
+            var form = jQuery(form).parents('form:first');
+        }
+        var url = null;
+        if(!url){
+            url = jQuery(form).attr('action');
+        }
+        url = url.replace("checkout/cart","imagemarker/checkout_cart"); 
+        url += 'isAjax/true/';
+        jQuery.ajax({
+            url: url,
+            dataType: 'json',
+            type : 'post',
+            data: form.serialize(),
+            success: function(data){
+                //jQuery('#cart-count-'+data.product_id).html(data.count);
+                if(data.status == 'SUCCESS'){
+                    if(jQuery('.header-minicart')){
+                        jQuery('.header-minicart').html(data.toplink);
+                    }
+                	if(jQuery('.main-message-ajax').hasClass('error-msg')){
+						jQuery('.main-message-ajax').removeClass('error-msg');
+					}
+                	jQuery('.main-message-ajax').addClass('success-msg');
+                	jQuery('.main-message-ajax.success-msg li span').html(data.message);
+                	jQuery('.messages-spl-cat').fadeIn(1000);
+                }
+                else{
+					if(data.status == 'ERROR'){
+						if(jQuery('.main-message-ajax').hasClass('success-msg')){
+							jQuery('.main-message-ajax').removeClass('success-msg');
+						}
+	                	jQuery('.main-message-ajax').addClass('error-msg');
+	                	jQuery('.main-message-ajax.error-msg li span').html(data.message);
+	                	jQuery('.messages-spl-cat').fadeIn(1000);
+                	}
+                }
+                setTimeout(function() {
+                    jQuery('.messages-spl-cat').fadeOut(1000);
+                }, 5000);
+            }
+        });
+        return false;
+    }
+</script>
+<script type="text/javascript">
+    decorateTable('schematic-table')
+</script>
+
+
+
+<?php /*if($this->isContentMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+
+<?php elseif($this->isMixedMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+    <?php echo $this->getProductListHtml() ?>
+
+<?php else: ?>
+    <?php echo $this->getProductListHtml() ?>
+<?php endif; */ ?>

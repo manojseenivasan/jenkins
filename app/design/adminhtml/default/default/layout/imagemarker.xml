@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+   
+  <imagemarker_adminhtml_imagemarker_index>
+	<reference name="content">
+	  <block type="imagemarker/adminhtml_imagemarker" name="imagemarker" />
+	</reference>
+  </imagemarker_adminhtml_imagemarker_index>
+
+  <imagemarker_adminhtml_imagemarker_edit>
+  	<reference name="head">
+  		<action method="addJs"><script>schematic/admin/jquery.min.js</script></action>
+  		<action method="addJs"><script>schematic/admin/jquery.noconflict.js</script></action>
+  		<action method="addJs"><script>schematic/admin/jquery-ui.min.js</script></action>
+  		<action method="addJs"><script>schematic/admin/jquery.annotate.js</script></action>
+  		<action method="addCss"><stylesheet>schematic/annotation.css</stylesheet></action>
+  	</reference>
+	<reference name="content">
+	  <block type="imagemarker/adminhtml_imagemarker" name="imagemarker"  template="imagemarker/schematic.phtml"/>
+	</reference>
+  </imagemarker_adminhtml_imagemarker_edit>
+</layout>

@@ -1,0 +1,15 @@
+<?php if($schematics = $this->getProductSchematics()): ?>
+	<ul id="product-schematic-table" class="schematic-grid products-grid products-grid--max-4-col">
+	<?php foreach ($schematics as $schematic) {
+		$file_path = 'catalog' . DS . 'category' . DS . $schematic->getSchematic(); ?>
+		<li>
+			<a class="schematic-image product-image" href="<?php echo $schematic->getUrl($schematic); ?>" title="<?php echo $schematic->getName(); ?>">
+				<img src="<?php echo Mage::helper('imagemarker')->CategoryImageResize($file_path, 320, 320); ?>" alt="<?php echo $schematic->getName(); ?>" />
+			</a>
+			<h3 class="schematic-name product-name">
+				<a title="<?php echo $schematic->getName(); ?>" href="<?php echo $schematic->getUrl($schematic); ?>"><?php echo $schematic->getName(); ?></a>
+			</h3>
+		</li>
+	<?php } ?>
+	</ul>
+<?php endif; ?>

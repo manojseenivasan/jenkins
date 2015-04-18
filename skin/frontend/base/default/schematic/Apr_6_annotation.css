@@ -1,0 +1,447 @@
+.image-annotate-add {
+    background: #fff url(../images/asterisk_yellow.png) no-repeat 3px 3px;
+    border: solid 1px #ccc !important;
+    color: #000 !important;
+    cursor: pointer;
+    display: block;
+    float: left;
+    font-family: Verdana, Sans-Serif;
+    font-size: 12px;    
+    height: 18px;
+    line-height: 18px;    
+    padding: 2px 0 2px 24px;
+    margin: 5px 0;
+    width: 64px;
+    text-decoration: none;
+}
+.image-annotate-add:hover {
+    background-color: #eee;
+}
+.image-annotate-canvas {
+    border: solid 1px #ccc;
+    background-position: left top;
+    background-repeat: no-repeat;
+    display: block;
+    margin: 0;
+    position: relative;
+}
+.image-annotate-view {
+    display: none;
+    position: relative;
+}
+.image-annotate-area {
+    /*border: 1px solid #000000;*/
+    position: absolute;
+}
+.image-annotate-area div {
+    /*border: 1px solid #FFFFFF;*/
+    display: block;
+}
+.image-annotate-area-hover div {
+    border-color: yellow !important;
+}
+.image-annotate-area-editable {
+    cursor: pointer;
+}
+.image-annotate-area-editable-hover div {
+    border: 2px solid;
+    /*border-color: #00AD00 !important;*/
+    border-color: rgb(250, 191, 143)  !important;
+}
+.image-annotate-note {
+    background: #E7FFE7 none repeat scroll 0 0;
+    border: solid 1px #397F39;
+    color: #000;
+    display: none;
+    font-family: Verdana, Sans-Serif;
+    font-size: 12px;
+    max-width: 200px;
+    padding: 3px 7px;
+    position: absolute;
+}
+.image-annotate-note .actions {
+    display: block;
+    font-size: 80%;
+}
+.image-annotate-edit {
+    display: none;
+}
+#image-annotate-edit-form {
+    background: none repeat scroll 0 0 #fff;
+    border: 1px solid #000000;
+    height: auto;
+    padding: 7px;
+    position: absolute;
+    max-width: 410px;
+}
+#image-annotate-edit-form form {
+    clear: right;
+    margin: 0 !important;
+    padding: 5px;
+    z-index: 999;
+}
+#image-annotate-edit-form form .title-note {
+    color: #000;
+    font-size: 12px;
+    padding: 15px 0 30px;
+    text-align: center;
+}
+#image-annotate-edit-form .box {
+    margin: 0;
+}
+#image-annotate-edit-form li {
+    display: block;
+    margin: 0 0 12px;
+    overflow: hidden;
+}
+#image-annotate-edit-form li label {
+    float: left;
+    margin: 7px 0 0;
+    text-align: right;
+    width: 29%;
+}
+#image-annotate-edit-form li .input-box {
+    float: right;
+    width: 70%;
+}
+#image-annotate-edit-form li .input-box input {
+    width: 75%;
+}
+#image-annotate-edit-form input.form-text, #image-annotate-edit-form #edit-comment-wrapper textarea {
+    width: 90%;
+}
+#image-annotate-edit-form textarea {
+    height: 50px;
+    font-family: Verdana, Sans-Serif;
+    font-size: 12px;    
+    width: 75%;
+}
+#image-annotate-edit-form button {
+    float: right;
+}
+#image-annotate-edit-form .image-annotate-edit-close {
+    margin-right: 5px;
+    background: none repeat scroll 0 0 #55bbee;
+}    
+#image-annotate-edit-form .image-annotate-edit-close:hover {
+    background: none repeat scroll 0 0 #2e8ab8;
+}
+#image-annotate-edit-form .product-group {
+    width: 100%;
+}
+#image-annotate-edit-form .product-group form.group {
+    float: left;
+    padding: 5px 5px 15px;
+    width: 197px;
+}
+#image-annotate-edit-form .product-group a.product-image img {
+    margin: 0 auto;
+}
+#image-annotate-edit-form .product-group .product-info a {
+    display: block;
+    margin: 5px 0 0;
+    text-align: center;
+}
+#image-annotate-edit-form .product-group .product-info .price-box {
+    text-align: center;
+}
+#image-annotate-edit-form .product-info .add-to-cart {
+    display: block;
+    overflow: hidden;
+}
+#image-annotate-edit-form .product-info .add-to-cart .qty-wrapper, #schematic-products-table .add-to-cart-buttons{
+    float: right;
+    border:1px solid #3399cc;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+#image-annotate-edit-form .product-info .add-to-cart .qty-wrapper:hover, {
+    border-color: #2e8ab8;
+}
+#image-annotate-edit-form .product-info .add-to-cart .add-to-cart-buttons .button {
+    margin: 0;
+    padding: 5px 27px 6px;
+}
+#image-annotate-edit-form fieldset {
+    background: transparent none repeat scroll 0 0;
+}
+#image-annotate-edit-form .form-item {
+    margin: 0 0 5px;
+}
+#image-annotate-edit-form .form-button, #image-annotate-edit-form .form-submit {
+    margin: 0;
+}
+#image-annotate-edit-form .product-group .button {
+    margin: 0 5px 0 0;
+}
+#image-annotate-edit-form .product-group .button.button-more {
+    clear: both;
+}
+/*#image-annotate-edit-form a {
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: 3px 3px;
+    border: solid 1px #ccc;
+    color: #333;
+    cursor: pointer;
+    display: block;
+    float: left;    
+    font-family: Verdana, Sans-Serif;
+    font-size: 12px;        
+    height: 18px;
+    line-height: 18px;
+    padding: 2px 0 2px 24px;
+    margin: 3px 6px 3px 0;
+    width: 48px;
+}
+#image-annotate-edit-form a:hover {
+    background-color: #eee;
+}*/
+.image-annotate-edit-area {
+    border: 1px solid black;
+    cursor: move;
+    display: block;
+    height: 60px;
+    left: 10px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 10px;
+    width: 60px;
+}
+.image-annotate-edit-area .ui-resizable-handle {
+    opacity: 0.8;
+}
+.image-annotate-edit-ok {
+    background-image: url(../images/accept.png);
+}
+.image-annotate-edit-delete {
+    background-image: url(../images/delete.png);
+}
+.image-annotate-edit-close {
+    background-image: url(../images/cross.png);
+}
+.ui-resizable {
+    position: relative;
+}
+.ui-resizable-handle {
+    position: absolute;
+    font-size: 0.1px;
+    z-index: 99999;
+    display: block;
+}
+.ui-resizable-disabled .ui-resizable-handle, .ui-resizable- autohide .ui-resizable-handle {
+    display: block;
+}
+.ui-resizable-n {
+    cursor: n-resize;
+    height: 7px;
+    width: 100%;
+    top: -5px;
+    left: 0px;
+}
+.ui-resizable-s {
+    cursor: s-resize;
+    height: 7px;
+    width: 100%;
+    bottom: -5px;
+    left: 0px;
+}
+.ui-resizable-e {
+    cursor: e-resize;
+    width: 7px;
+    right: -5px;
+    top: 0px;
+    height: 100%;
+}
+.ui-resizable-w {
+    cursor: w-resize;
+    width: 7px;
+    left: -5px;
+    top: 0px;
+    height: 100%;
+}
+.ui-resizable-se {
+    cursor: se-resize;
+    width: 12px;
+    height: 12px;
+    right: 1px;
+    bottom: 1px;
+}
+.ui-resizable-sw {
+    cursor: sw-resize;
+    width: 9px;
+    height: 9px;
+    left: -5px;
+    bottom: -5px;
+}
+.ui-resizable-nw {
+    cursor: nw-resize;
+    width: 9px;
+    height: 9px;
+    left: -5px;
+    top: -5px;
+}
+.ui-resizable-ne {
+    cursor: ne-resize;
+    width: 9px;
+    height: 9px;
+    right: -5px;
+    top: -5px;
+}
+
+/* Custom changes */
+.layer-row td{
+    background-color:#FFFFFF;
+}
+.layer-row.on-mouse td{    
+    background-color:rgb(250, 191, 143);
+}
+/*.product-group .button{
+    clear:both;
+}*/
+.schematic-data{
+    position: relative;
+}
+.schematic-image{
+    top:10px;
+}
+#image-annotate-edit-form .qty-wrapper .input-text.qty {
+  border:0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+#schematic-products-table.data-table td{
+    vertical-align: middle;   
+}
+#schematic-products-table .input-text.qty {
+  border:0;
+  float: left;
+  height: 32.5px;
+}
+#schematic-products-table .add-to-cart-buttons {
+    border:1px solid #3399cc;
+}
+.schematic-inner-data .main-schemantic-image {
+  float: left;
+  width: 51%;
+}
+.schematic-inner-data .product-data {
+  float: right;
+  width: 49%;
+}
+#image-annotate-edit-form .product-image{
+    border:0;
+}
+.large-data .schematic-inner-data .product-data {
+  width: 36.8%;
+}
+.large-data .product-data .add-to-cart-buttons .button.btn-cart {
+  font-size: 30px;
+}
+.product-data .add-to-cart-buttons .button.btn-cart {
+  font-size: 25px;
+}
+#schematic-products-table td{
+    width:23%;
+}
+/****************** Responsive design *******************/
+@media (max-width:1100px){
+#schematic-products-table td.prod-sku {
+  width: 150px;
+}
+#schematic-products-table td {
+  width: 36%;
+}
+}
+@media (max-width:1024px){
+.large-data .schematic-inner-data .product-data {
+    width: 47%;
+}
+.large-data .schematic-inner-data .main-schemantic-image {
+    width: 70%;
+}
+.large-data .schematic-inner-data .image-annotate-canvas {
+    width: 78%!important;
+    height:400px!important;
+    background-size: 100%;   
+}
+#schematic-products-table input.qty[type="number"], #schematic-products-table input.qty[type="text"] {
+  width: 2.5em;
+}
+#schematic-products-table.data-table td, #schematic-products-table.data-table th{
+    padding-left: 0;
+    padding-right: 0;
+}
+#schematic-products-table td.prod-sku {
+  width: 88px;
+}
+.product-data .add-to-cart-buttons .button.btn-cart {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+}
+@media (max-width:980px){
+.schematic-inner-data .product-data {
+  width: 100%;
+}
+.schematic-inner-data .main-schemantic-image {
+  width: 100%;
+}
+#schematic-products-table.data-table th{
+    font-size: 13px;
+}
+}
+@media (max-width:767px){
+.large-data .schematic-inner-data .image-annotate-canvas {
+    height:250px!important;
+}
+#schematic-products-table td.prod-name {
+  width: 0;
+}
+#schematic-products-table input.qty[type="number"], #schematic-products-table input.qty[type="text"] {
+  width: 2em;
+}
+#schematic-products-table.data-table th{
+    font-size: 12px;
+}
+}
+@media (max-width:640px){
+#schematic-table .image-annotate-canvas {
+    min-width :377px;
+}
+#schematic-table .image-annotate-view {
+    min-width:375px;
+}
+#schematic-table .image-annotate-edit {
+    min-width: 375px;
+}
+#schematic-table  .schematic-image{
+    min-width: 377px;
+}
+.schematic-inner-data .main-schemantic-image {
+    float: none;
+    min-width: 377px;
+    margin:0 auto;
+}
+.schematic-inner-data .product-data {
+  float: none;
+  width: 69%!important;
+  margin-top: 18px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#schematic-products-table.data-table th{
+    font-size: 14px;
+}
+}
+@media (max-width:480px){
+.schematic-inner-data .product-data {
+  width: 95%!important;
+}
+}
+@media (max-width:360px){
+.schematic-inner-data .product-data {
+  width: 100%!important;
+}
+}
